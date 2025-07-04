@@ -1,0 +1,42 @@
+name: Run Script
+
+on:
+  push:
+    branches: 
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      log_filename:
+        description: 'Optional log filename (without path)'
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Make script executable
+        run: chmod +x scripts/hello.sh
+
+      - name: Run script
+        run: |
+          if [ -n "${{ github.event.inputs.log_filename }}" ]; then
+            ./scripts/hello.sh "${{ github.event.inputs.log_filename }}"
+          else
+            ./scripts/hello.sh
+          fi
+
+      - name: Upload log files as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: log-files
+          path: logs/
+          if-no-files-found: warn
