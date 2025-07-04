@@ -1,0 +1,21 @@
+name: Run bash script
+
+on:
+  push:
+    branches: 
+      - main
+
+jobs:
+  run-script:
+   runs-on: ubuntu-latest
+
+   steps:
+    - name: Checkout code
+    - uses: actions/checkout@v3
+
+
+    - name: Make script executable
+    - run: chmod +x ./script.sh
+
+    - name: Run script
+      run: ./script.sh
